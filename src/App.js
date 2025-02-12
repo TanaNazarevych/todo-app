@@ -1,42 +1,38 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import TaskPage from "./pages/TaskPage";
+import Task from "./pages/Task";
+import { useState } from "react";
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  //Function to add a new task
-  const addTask = (taskTitle) => {
-    const newTask = { id: Date.now(), title: taskTitle, completed: false };
+  const addTask = (title, text) => {
+    const newTask = { id: Date.now(), title, text, completed: false };
     setTasks([...tasks, newTask]);
   };
 
-  //Function to update a task title
-  const updateTask = (id, newTitle) => {
-    setTasks(tasks.map(task => task.id === id ? { ...task, title: newTitle } : task));
+  const updateTask = (taskId, updatedTitle, updatedText) => {
+    setTasks(tasks.map(task =>
+      task.id === taskId ? { ...task, title: updatedTitle, text: updatedText } : task
+    ));
   };
 
-  //Function to toggle task completion
   const toggleTask = (id) => {
-    setTasks(tasks.map(task => task.id === id ? { ...task, completed: !task.completed } : task));
+    setTasks(tasks.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
   };
 
-  //Function to delete a task
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
   return (
-    <Router> {/*Enables routing in the app */}
-      <Routes> {/*Holds all routes (pages) */}
-        <Route path="/" element={<Home tasks={tasks} addTask={addTask} />} />
-        <Route
-          path="/task/:id"
-          element={<TaskPage tasks={tasks} updateTask={updateTask} toggleTask={toggleTask} deleteTask={deleteTask} />}
-        />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<Home tasks={tasks} addTask={addTask} />} />
+      {/* A single route that handles both creating and editing tasks */}
+      <Route path="/task/:id" element={<Task tasks={tasks} addTask={addTask} updateTask={updateTask} toggleTask={toggleTask} deleteTask={deleteTask} />} />
+    </Routes>
   );
 }
 

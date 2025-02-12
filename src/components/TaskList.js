@@ -1,37 +1,49 @@
 import { useState } from "react";
-import TaskItem from "./TaskItem"
+import { useNavigate } from "react-router-dom";
+import TaskItem from "./TaskItem";
 
-function TaskList({tasks}){
-  const[search, setSearch] = useState("");
+function TaskList({ tasks }) {
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
-  const filteredTasks = TaskList.filter
-  (task => task.title.toLowerCase().includes(search.toLowerCase()) ||
-  task.text.toLowerCase().includes(search.toLowerCase())
+  const filteredTasks = tasks.filter(task =>
+    task.title.toLowerCase().includes(search.toLowerCase()) ||
+    (task.text && task.text.toLowerCase().includes(search.toLowerCase()))
   );
 
-  return(
-    <>
-      {tasks.length > 0 && (
-        <input
-          type="text"
-          placeholder="Search tasks..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+  return (
+    <div>
+      {tasks.length === 0 && (
+        <div>
+          <p>No tasks yet.</p>
+          <button onClick={() => navigate("/task/new")}>Add Task</button>
+        </div>
       )}
-      <ul>
-        {filteredTasks.length > 0 ? (
-          filteredTasks.map((task) => (
-            <TaskItem key={task.id} task={task} />
-          ))
-        ) : (
-          <p>No tasks found.</p>
-        )}
-      </ul>
 
-    </>
+      {tasks.length > 0 && (
+        <div>
+          <input
+            type="text"
+            placeholder="Search tasks..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <br/>
+          <button onClick={() => navigate("/task/new")}>Add Task</button>
+
+          <div>
+            {filteredTasks.length > 0 ? (
+              filteredTasks.map((task) => (
+                <TaskItem key={task.id} task={task} />
+              ))
+            ) : (
+              <p>No tasks found.</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
-
-};
+}
 
 export default TaskList;

@@ -1,23 +1,33 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function TaskForm({ addTask }) {
-  const [taskInput, setTaskInput] = useState("");
+function TaskForm({ onSubmit, existingTask }) {
+  const [title, setTitle] = useState(existingTask ? existingTask.title : "");
+  const [text, setText] = useState(existingTask ? existingTask.text : "");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!taskInput.trim()) return;
-    addTask(taskInput);
-    setTaskInput("");
+    if (!title.trim()) return;
+    onSubmit(title, text); 
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Enter a task..."
-        value={taskInput}
-        onChange={(e) => setTaskInput(e.target.value)}
+        placeholder="Task Title..."
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
       />
-      <button type="submit">Add Task</button>
+      <input
+        type="text"
+        placeholder="Task Description..."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button type="submit">{existingTask ? "Save Changes" : "Add Task"}</button>
+      <button type="button" onClick={() => navigate("/")}>Cancel</button>
     </form>
   );
 }
