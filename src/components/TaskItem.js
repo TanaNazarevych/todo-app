@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function taskItem ({task}){
+function TaskItem ({task}){
   return(
     <>
         <Link to={`/task/${task.id}`} style={{ textDecoration: task.completed ? "line-through" : "none" }}>
@@ -11,4 +11,4 @@ function taskItem ({task}){
 
 };
 
-export default taskItem;
+export default TaskItem;
