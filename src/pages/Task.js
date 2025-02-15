@@ -1,5 +1,7 @@
+import React from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import TaskForm from "../components/TaskForm";
+import { Card } from "antd";
 
 function Task({ tasks = [], addTask, updateTask, deleteTask }) {
   const { id } = useParams();
@@ -12,11 +14,11 @@ function Task({ tasks = [], addTask, updateTask, deleteTask }) {
     return <p>Task not found.</p>;
   }
 
-  const handleSubmit = (title, text) => {
+  const handleSubmit = (title, text, isComplete) => {
     if (isNewTask) {
-      addTask(title, text);
+      addTask(title, text, isComplete);
     } else {
-      updateTask(existingTask.id, title, text);
+      updateTask(existingTask.id, title, text, isComplete);
     }
     navigate("/");
   };
@@ -27,12 +29,9 @@ function Task({ tasks = [], addTask, updateTask, deleteTask }) {
   };
 
   return (
-    <div>
-      <h1>{isNewTask ? "Create Task" : "Edit Task"}</h1>
-      <TaskForm onSubmit={handleSubmit} existingTask={existingTask} />
-      {!isNewTask && <button onClick={handleDelete}>Delete Task</button>}
-      <button onClick={() => navigate("/")}>Cancel</button>
-    </div>
+    <Card title={isNewTask ? "Create Task" : "Edit Task"} style={{ marginBottom: '20px' }}>
+      <TaskForm onSubmit={handleSubmit} existingTask={existingTask} onDelete={handleDelete} />
+    </Card>
   );
 }
 
