@@ -6,6 +6,7 @@ function TaskItem ({task}){
         <Link to={`/task/${task.id}`} style={{ textDecoration: task.completed ? "line-through" : "none" }}>
         {task.title}
       </Link>
+      {task.text && <p>{task.text}</p>}
     </>
   );
 

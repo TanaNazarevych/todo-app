@@ -17,11 +17,11 @@ function App() {
     ));
   };
 
-  const toggleTask = (id) => {
-    setTasks(tasks.map(task =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
-  };
+  // const toggleTask = (id) => {
+  //   setTasks(tasks.map(task =>
+  //     task.id === id ? { ...task, completed: !task.completed } : task
+  //   ));
+  // };
 
   const deleteTask = (id) => {
     setTasks(tasks.filter(task => task.id !== id));
@@ -30,8 +30,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home tasks={tasks} addTask={addTask} />} />
-      {/* A single route that handles both creating and editing tasks */}
-      <Route path="/task/:id" element={<Task tasks={tasks} addTask={addTask} updateTask={updateTask} toggleTask={toggleTask} deleteTask={deleteTask} />} />
+      <Route path="/task/:id" element={<Task tasks={tasks} addTask={addTask} updateTask={updateTask} deleteTask={deleteTask} />} />
     </Routes>
   );
 }
