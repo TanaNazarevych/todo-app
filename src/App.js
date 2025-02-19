@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Row, Col } from 'antd';
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -7,7 +7,16 @@ import Task from "./pages/Task";
 const { Header, Content, Footer } = Layout;
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
+  useEffect(() => {
+    console.log("Saving tasks:", tasks); // Debug log
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
 
   const addTask = (title, text, isComplete) => {
     const newTask = { id: Date.now(), title, text, completed: isComplete };
