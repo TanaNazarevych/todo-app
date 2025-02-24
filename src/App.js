@@ -3,39 +3,56 @@ import { Layout, Row, Col } from 'antd';
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Task from "./pages/Task";
+import { db } from './firebase';
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 const { Header, Content, Footer } = Layout;
 
 function App() {
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem("tasks");
-    return savedTasks ? JSON.parse(savedTasks) : [];
-  });
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    console.log("Saving tasks:", tasks); // Debug log
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    const fetchTasks = async () => {
+      const querySnapshot = await getDocs(collection(db, "tasks"));
+      const tasksData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setTasks(tasksData);
+    };
 
+    fetchTasks();
+  }, []);
 
-  const addTask = (title, text, isComplete) => {
-    const newTask = { id: Date.now(), title, text, completed: isComplete };
-    setTasks([...tasks, newTask]);
+  const addTask = async (title, text, isComplete) => {
+    const newTask = { title, text, completed: isComplete };
+    const docRef = await addDoc(collection(db, "tasks"), newTask);
+    setTasks([...tasks, { id: docRef.id, ...newTask }]);
   };
 
-  const updateTask = (taskId, updatedTitle, updatedText, isComplete) => {
+  const updateTask = async (taskId, updatedTitle, updatedText, isComplete) => {
+    const taskRef = doc(db, "tasks", taskId);
+    await updateDoc(taskRef, {
+      title: updatedTitle,
+      text: updatedText,
+      completed: isComplete
+    });
     setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, title: updatedTitle, text: updatedText, completed: isComplete } : task
     ));
   };
 
-  const toggleTask = (id) => {
+  const toggleTask = async (id) => {
+    const task = tasks.find(task => task.id === id);
+    const taskRef = doc(db, "tasks", id);
+    await updateDoc(taskRef, {
+      completed: !task.completed
+    });
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
   };
 
-  const deleteTask = (id) => {
+  const deleteTask = async (id) => {
+    const taskRef = doc(db, "tasks", id);
+    await deleteDoc(taskRef);
     setTasks(tasks.filter(task => task.id !== id));
   };
 
