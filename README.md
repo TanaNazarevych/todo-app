@@ -22,3 +22,8 @@ npm install
 npm start
 
 Runs on http://localhost:3000/ 🚀
+
+//login, retrive data
+firebase, subbase
+back end - store tasks on a database
+grad programs, 2 types of cv
