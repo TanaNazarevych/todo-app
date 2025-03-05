@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Checkbox } from "antd";
 
-function TaskForm({ onSubmit, existingTask, onDelete }) {
+function TaskForm({ onSubmit, existingTask }) {
   const [title, setTitle] = useState(existingTask ? existingTask.title : "");
   const [text, setText] = useState(existingTask ? existingTask.text : "");
   const [isComplete, setIsComplete] = useState(existingTask ? existingTask.isComplete : false);
@@ -43,16 +43,11 @@ function TaskForm({ onSubmit, existingTask, onDelete }) {
         </Form.Item>
       )}
       <Form.Item>
-        <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>
+        <Button type="primary" htmlType="submit">
           {existingTask ? "Save Changes" : "Add Task"}
         </Button>
-        {existingTask && (
-          <Button type="default" onClick={onDelete} style={{ marginRight: '10px' }}>
-            Delete Task
-          </Button>
-        )}
         <Button type="default" onClick={() => navigate("/")}>
-          Back
+          Cancel
         </Button>
       </Form.Item>
     </Form>
