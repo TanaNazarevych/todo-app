@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Row, Col, Menu } from 'antd';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Link } from 'react-router-dom';
 import Home from "./pages/Home";
 import Task from "./pages/Task";
 import Register from './components/Register';
@@ -18,16 +18,22 @@ function App() {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const querySnapshot = await getDocs(collection(db, "tasks"));
-      const tasksData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setTasks(tasksData);
+      try {
+        const querySnapshot = await getDocs(collection(db, "tasks"));
+        const tasksData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setTasks(tasksData);
+      } catch (error) {
+        console.error("Error fetching tasks:", error.message); // Debugging
+      }
     };
 
     fetchTasks();
   }, []);
 
+  // for authentication state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Authenticated User:", user); // Debugging
       setUser(user);
     });
 
@@ -41,15 +47,25 @@ function App() {
   };
 
   const updateTask = async (taskId, updatedTitle, updatedText, isComplete) => {
-    const taskRef = doc(db, "tasks", taskId);
-    await updateDoc(taskRef, {
-      title: updatedTitle,
-      text: updatedText,
-      completed: isComplete
-    });
-    setTasks(tasks.map(task =>
-      task.id === taskId ? { ...task, title: updatedTitle, text: updatedText, completed: isComplete } : task
-    ));
+    console.log("Editing Task ID:", taskId); // Debugging
+    console.log("Updated Title:", updatedTitle); // Debugging
+    console.log("Updated Text:", updatedText); // Debugging
+    console.log("Is Complete:", isComplete); // Debugging
+  
+    try {
+      const taskRef = doc(db, "tasks", taskId);
+      await updateDoc(taskRef, {
+        title: updatedTitle,
+        text: updatedText,
+        completed: isComplete
+      });
+      setTasks(tasks.map(task =>
+        task.id === taskId ? { ...task, title: updatedTitle, text: updatedText, completed: isComplete } : task
+      ));
+      console.log("Task updated successfully!"); // Debugging
+    } catch (error) {
+      console.error("Error updating task:", error.message); // Debugging
+    }
   };
 
   const toggleTask = async (id) => {
@@ -77,15 +93,15 @@ function App() {
         </div>
         <Menu mode="horizontal">
           <Menu.Item key="home">
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </Menu.Item>
           {!user && (
             <>
               <Menu.Item key="register">
-                <a href="/register">Register</a>
+                <Link to="/register">Register</Link>
               </Menu.Item>
               <Menu.Item key="login">
-                <a href="/login">Login</a>
+                <Link to="/login">Login</Link>
               </Menu.Item>
             </>
           )}

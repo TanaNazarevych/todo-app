@@ -4,19 +4,16 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Form, Input, Button } from 'antd';
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  const handleRegister = async ({ email, password }) => {
     const auth = getAuth();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      navigate('/'); // Redirect to home after successful registration
     } catch (error) {
-      setError(error.message);
+      setError(error.message); // Display error message
     }
   };
 
@@ -24,27 +21,23 @@ const Register = () => {
     <div>
       <h2>Register</h2>
       <Form onFinish={handleRegister}>
-        <Form.Item>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-          />
+        <Form.Item
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
+        >
+          <Input placeholder="Email" />
         </Form.Item>
-        <Form.Item>
-          <Input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
+        <Form.Item
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input type="password" placeholder="Password" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">Register</Button>
         </Form.Item>
       </Form>
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 };

@@ -4,28 +4,28 @@ import TaskForm from "../components/TaskForm";
 import { Card } from "antd";
 
 function Task({ tasks = [], addTask, updateTask, deleteTask }) {
-  const { id } = useParams();
+  const { id } = useParams(); // Extract the task ID from the URL
   const navigate = useNavigate();
 
-  const isNewTask = id === "new";
-  const existingTask = !isNewTask ? tasks.find((task) => task.id === Number(id)) : null;
+  const isNewTask = id === "new"; // Check if this is a new task
+  const existingTask = !isNewTask ? tasks.find((task) => task.id === id) : null; // Find the task by ID
 
   if (!isNewTask && !existingTask) {
-    return <p>Task not found.</p>;
+    return <p>Task not found.</p>; // Show error if task is not found
   }
 
   const handleSubmit = (title, text, isComplete) => {
     if (isNewTask) {
-      addTask(title, text, isComplete);
+      addTask(title, text, isComplete); // Add a new task
     } else {
-      updateTask(existingTask.id, title, text, isComplete);
+      updateTask(existingTask.id, title, text, isComplete); // Update the existing task
     }
-    navigate("/");
+    navigate("/"); // Navigate back to the home page
   };
 
   const handleDelete = () => {
-    deleteTask(existingTask.id);
-    navigate("/");
+    deleteTask(existingTask.id); // Delete the task
+    navigate("/"); // Navigate back to the home page
   };
 
   return (
