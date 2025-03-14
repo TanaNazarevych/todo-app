@@ -28,14 +28,11 @@ A sleek and intuitive to-do list app built with React, Firebase, and Ant Design.
 - Real-time sync across devices.
 
 🖥️ UI Preview
-
-
-💻 Local Setup Instructions
 ![login screen](https://raw.githubusercontent.com/TanaNazarevych/todo-app/1a3b6b5a310f7d53b5835ef5dc8de503a314abe0/login.png)
 ![home screen](https://raw.githubusercontent.com/TanaNazarevych/todo-app/1a3b6b5a310f7d53b5835ef5dc8de503a314abe0/home.png)
 
 
-
+💻 Local Setup Instructions
 1️⃣ Clone the Repository
 git clone https://github.com/TanaNazarevych/todo-app.git
 cd todo-app
