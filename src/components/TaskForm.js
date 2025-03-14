@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, Space } from "antd";
 
 function TaskForm({ onSubmit, existingTask }) {
   const [title, setTitle] = useState(existingTask ? existingTask.title : "");
@@ -43,12 +43,14 @@ function TaskForm({ onSubmit, existingTask }) {
         </Form.Item>
       )}
       <Form.Item>
+        <Space>
         <Button type="primary" htmlType="submit">
           {existingTask ? "Save Changes" : "Add Task"}
         </Button>
         <Button type="default" onClick={() => navigate("/")}>
           Cancel
         </Button>
+        </Space>
       </Form.Item>
     </Form>
   );
